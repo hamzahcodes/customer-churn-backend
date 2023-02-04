@@ -24,3 +24,4 @@ def home():
     path = os.getcwd()
     x = path.replace("\\", "/")
     return {"data" : x}
+
