@@ -1,12 +1,11 @@
 import os
-import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.router import user, authentication, files
+from backend.router import user, authentication, insights, algorithms, predict, profile
+
 app = FastAPI()
 
 origins = [ "*" ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -15,10 +14,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(user.router)
 app.include_router(authentication.router)
-app.include_router(files.router)
+app.include_router(insights.router)
+app.include_router(algorithms.router)
+app.include_router(predict.router)
+app.include_router(profile.router)
 
 @app.get("/")
 def home():

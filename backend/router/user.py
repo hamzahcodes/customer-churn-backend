@@ -18,7 +18,10 @@ def register_user(request : schemas.User):
                   'username': request.username,
                   'email': request.email,
                   'password': hashed_pwd,
-                  'files': []  
+                  'train_files': [],
+                  'test_files': [],
+                  'models': [],
+                  'scores': [] 
                 }
 
     check = {'email' : request.email}
@@ -27,9 +30,11 @@ def register_user(request : schemas.User):
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="User already registered")
 
     database.collection.insert_one(dictionary)
-    newUser = schemas.User(user_id=request.user_id, username=request.username, email=request.email, password=request.password)
-    json_compatible_item_data = jsonable_encoder(newUser)
-    return JSONResponse(content=json_compatible_item_data)
+    user = database.collection.find_one(check, {'_id': 0})
+    return { "data": user}
+    # newUser = schemas.User(user_id=request.user_id, username=request.username, email=request.email, password=request.password)
+    # json_compatible_item_data = jsonable_encoder(newUser)
+    # return JSONResponse(content=json_compatible_item_data)
     # return {"message" : "new user created successfully"}
 
 @router.get("/users")
@@ -49,6 +54,7 @@ def add_files(email: str):
     query = database.collection.find_one({'email': email}, {'_id': 0})
     # print(query)
     file_lst = query['files']
+
     # print(file_lst/, type(file_lst))
     file_lst.append("new_file")
     # print(file_lst)

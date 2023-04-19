@@ -8,17 +8,5 @@ from fastapi.responses import JSONResponse
 from .. import schemas, database
 
 router = APIRouter(
-    tags=['File-Handling']
+    tags=['User']
 )
-
-def get_folder_name(email):
-    folder_name = ""
-    for char in email:
-        if char == '@':
-            break
-        folder_name += char
-    return folder_name
-
-
-
-
