@@ -49,6 +49,10 @@ def train_models(email: str, filename: str):
         return {"info" : "model trained already"}
 
     df = pd.read_csv(file_location)
+
+    if "churn" or "CHURN" in df.columns:
+        df = df.rename({"churn" : "Churn"}, axis = 1)
+        
     for col in df.columns:
         if 'customer' in col or 'Customer' in col or 'ID' in col or 'id' in col or 'name' in col or 'Name' in col or 'RowNumber' in col:
             df.drop([col], axis = 1, inplace = True)
@@ -60,6 +64,7 @@ def train_models(email: str, filename: str):
         df[col] = df[col].fillna(df[col].mode()[0])
 
     cat_variables = [ var for var in df.columns if len(df[var].unique()) < 10]
+
 
     if(df['Churn'][0] != 1 and df['Churn'][0] != 0):
         dictionary = {'yes': 1, 'no': 0, 'Yes': 1, 'No': 0}
@@ -88,7 +93,7 @@ def train_models(email: str, filename: str):
     from sklearn.tree import DecisionTreeClassifier
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.linear_model import LogisticRegression
-    from xgboost import XGBClassifier
+    # from xgboost import XGBClassifier
     from sklearn.ensemble import GradientBoostingClassifier
     from sklearn.metrics import mean_absolute_error
     from sklearn.model_selection import GridSearchCV
